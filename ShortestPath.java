@@ -49,13 +49,45 @@ public class ShortestPath{
 		No entries of G will be negative.
 	*/
 	static int ShortestPath(int[][] G){
+		Heap h = new Heap();
 		int numVerts = G.length;
 		int totalWeight = 0;
 		/* ... Your code here ... */
+		Vert[] ref = Vert[n];
+		for(int i = 0;i<numberVerts;i++){
+			Vert[i]= new Vert(i);
+		}
 		
+		int[] distance = new int[numVerts];
 		
+		for(int i = 1; i<numberVerts;i++){
+			distance[i] = 99999999;
+
+		}
+		distance[0] = 0;
+		for(int row = 0; row <numVerts;row++){
+			count2++;		//each time we travel down a row, begin column by 1
+			for(int column=count2; column< numVerts;column++){
+				
+				if(G[row][column]>0){
+					
+					h.add(new Edge(row,column,G[row][column],ref));  //construct heap
+					System.out.println("edge added");
+				}
+				
+			}
+			
+			
+		}
+		
+		while(h.getSize != null){
+			//do heap stuff 
+
+	 	int minWeight = h.removeMin().weight;
 
 
+	 	totalWeight+=minWeight;
+		}
 
 
 
@@ -68,6 +100,33 @@ public class ShortestPath{
 		
 	}
 
+public static class Edge{
+		public Vert x;
+		public Vert y;
+		public int weight;
+		//public boolean visited = false;
+		public Edge(int a,int b,int weight, Vert[] ref){
+			this.weight = weight;
+			this.x = ref[a];
+			this.y = ref[b];
+
+			
+		}
+
+	}
+
+	public static class Vert{
+		public boolean inTree;
+		public int val;
+		//public int rank= 0;
+		public Vert(int val){
+			this.val = val;
+			this.inTree = false;
+			
+		}
+		
+
+	}
 
 	public static class Heap{
 
@@ -96,7 +155,7 @@ public class ShortestPath{
 			HeapNode point = root;
 			String binaryDirections = (Integer.toBinaryString(size));
 			binaryDirections = binaryDirections.substring(1);
-			int minElement = root.element;
+			int minElement = root.weight;
 			if (getRoot() == null)
 				return -1; //end of heap.
 			
@@ -112,7 +171,7 @@ public class ShortestPath{
 						
 			}
 			
-			root.element = point.element; //move last element to root
+			root.weight = point.weight; //move last element to root
 			
 			if(size == 1){
 				root = null;
@@ -121,10 +180,10 @@ public class ShortestPath{
 
 			}
 
-			//System.out.println("the root value is " +point.element);
-			if(point.parent.rightChild!= null && point.parent.rightChild.element==point.element) 
+			//System.out.println("the root value is " +point.weight);
+			if(point.parent.rightChild!= null && point.parent.rightChild.weight==point.weight) 
 				point.parent.rightChild = null;//unlink last element
-			else if (point.parent.leftChild!= null && point.parent.leftChild.element == point.element)
+			else if (point.parent.leftChild!= null && point.parent.leftChild.weight == point.weight)
 				point.parent.leftChild = null;
 			
 		point = null;
@@ -148,20 +207,20 @@ public class ShortestPath{
 				if(lesserElementChild == -1) break;
 				
 
-				if(lesserElementChild < point.element ){ //then we must swap elements
+				if(lesserElementChild < point.weight ){ //then we must swap elements
 					
-					//System.out.println("time to swap "+  point.element +" and "+lesserElementChild);
+					//System.out.println("time to swap "+  point.weight +" and "+lesserElementChild);
 					
-					int temp = point.element;
-					point.element = lesserElementChild;
+					int temp = point.weight;
+					point.weight = lesserElementChild;
 					lesserElementChild = temp; //put lesser element in node
 					
-					if(point.element == point.leftChild.element){
-						point.leftChild.element = lesserElementChild;
+					if(point.weight == point.leftChild.weight){
+						point.leftChild.weight = lesserElementChild;
 						point = point.leftChild;
 						}
 					else {
-						point.rightChild.element = lesserElementChild; //swap complete
+						point.rightChild.weight = lesserElementChild; //swap complete
 						point = point.rightChild;
 					}
 
@@ -182,9 +241,9 @@ public class ShortestPath{
 
 			if(parent.leftChild ==null) return -1;
 			
-			else if(parent.rightChild == null || parent.leftChild.element < parent.rightChild.element) return parent.leftChild.element;
+			else if(parent.rightChild == null || parent.leftChild.weight < parent.rightChild.weight) return parent.leftChild.weight;
 
-			else return parent.rightChild.element;
+			else return parent.rightChild.weight;
 
 
 		}
@@ -245,13 +304,13 @@ public class ShortestPath{
 			
 			
 			while(last!=getRoot()){
-				//System.out.println("the last element: " + last.element+ "and the parent: "+last.parent.element);
+				//System.out.println("the last element: " + last.weight+ "and the parent: "+last.parent.weight);
 				
-				if(last.parent.element > last.element ){
+				if(last.parent.weight > last.weight ){
 					//System.out.print("time fo a swap mawfuka");
-					int temp = last.element;
-					last.element = last.parent.element;
-					last.parent.element = temp;
+					int temp = last.weight;
+					last.weight = last.parent.weight;
+					last.parent.weight = temp;
 					last = last.parent;
 				}
 				else{
@@ -296,7 +355,7 @@ public class ShortestPath{
 		public HeapNode rightChild;
 		
 		public HeapNode(int element){
-			this.element = element;
+			this.weight = element;
 		}
 	}
 	/* main()
