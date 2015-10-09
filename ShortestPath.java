@@ -63,19 +63,6 @@ public class ShortestPath{
 			ref[i]= new Vert(i,distance);
 		}
 		
-	/*
-			for(int row = 0; row <numVerts;row++){
-				for(int column=0; column< numVerts;column++){
-					int edgeWeight =  G[row][column];
-					ref[row].neighbours
-					System.out.print(edgeWeight + " ");
-					if(edgeWeight > 0 ){
-						
-						
-					
-					}
-				}	
-			}	*/
 		
 		distance[0] = 0;
 		h.add(ref[0]);
@@ -88,7 +75,7 @@ public class ShortestPath{
 		 	Vert minVert = h.removeMin();
 		 	//System.out.println("min vert now removed!!! " + minVert.val);
 		 	//h.printTree();
-			ref[minVert.val].inTree = true;
+														ref[minVert.val].inTree = true;
 
 		 	//push neighbourts of minVert
 		 	//System.out.println("the min vert distance is now: "+ minVert.distance[minVert.val] );
@@ -107,7 +94,6 @@ public class ShortestPath{
 						//System.out.println("heres the edge weight of a neighbour, "+ref[column].val +",: "+  edgeWeight);
 					//	//System.out.println(ref[minVert.val].inTree );
 						
-						h.add(ref[column]);
 						
 
 						//System.out.println("vert added to heap: "+column);
@@ -119,7 +105,7 @@ public class ShortestPath{
 							distance[column] =  distance[minVert.val] + edgeWeight;
 							//System.out.println("-> " + distance[column] );
 							//System.out.println(" ");
-
+							h.add(ref[column]);
 
 							
 						}
@@ -129,16 +115,6 @@ public class ShortestPath{
 					
 				}
 				
-
-
-
-
-					 
-			
-
-
-
-
 	}
 
 
