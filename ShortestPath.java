@@ -53,46 +53,64 @@ public class ShortestPath{
 		int numVerts = G.length;
 		int totalWeight = 0;
 		/* ... Your code here ... */
-		Vert[] ref = Vert[n];
-		for(int i = 0;i<numberVerts;i++){
-			Vert[i]= new Vert(i);
+		Vert[] ref = new Vert[numVerts];
+		for(int i = 0;i<numVerts;i++){
+			ref[i]= new Vert(i);
 		}
 		
 		int[] distance = new int[numVerts];
 		
-		for(int i = 1; i<numberVerts;i++){
+		for(int i = 1; i<numVerts;i++){
 			distance[i] = 99999999;
 
 		}
 		distance[0] = 0;
-		for(int row = 0; row <numVerts;row++){
-			count2++;		//each time we travel down a row, begin column by 1
-			for(int column=count2; column< numVerts;column++){
-				
-				if(G[row][column]>0){
+		h.add(ref[0].val);
+
+		
+		while(h.getSize() != 0){
+			//do heap stuff 
+		 	int minVert = h.removeMin();
+		 	//push neighbourts of minVert
+		 	ref[minVert].inTree = true;
+		 	int count2 = 0; //init 2nd counter
+			
+			for(int row = 0; row <numVerts;row++){
+				count2++;		//each time we travel down a row, begin column by 1
+				for(int column=count2; column< numVerts;column++){
+					int edgeWeight =  G[row][column];
 					
-					h.add(new Edge(row,column,G[row][column],ref));  //construct heap
-					System.out.println("edge added");
+					if(edgeWeight > 0 && row == minVert && !ref[column].inTree){
+						//neighbours are on this row.
+						 //construct heap
+						System.out.println(edgeWeight);
+						h.add(column);
+						
+						
+						if(distance[minVert]+ edgeWeight < distance[column]){
+							distance[column] =  distance[minVert] + edgeWeight;
+							
+						}
+
+
+					}
+					
 				}
 				
+
+
+
+
 			}
-			
-			
-		}
-		
-		while(h.getSize != null){
-			//do heap stuff 
-
-	 	int minWeight = h.removeMin().weight;
-
-
-	 	totalWeight+=minWeight;
-		}
 
 
 
+	}
 
 
+	for(int weight: distance) {
+		totalWeight+= weight == 99999999 ?   0 : weight ;
+	}
 
 
 
@@ -118,11 +136,12 @@ public static class Edge{
 	public static class Vert{
 		public boolean inTree;
 		public int val;
+		public int distance;
 		//public int rank= 0;
-		public Vert(int val){
+		public Vert(int val,int[] distance){
 			this.val = val;
 			this.inTree = false;
-			
+			this.distance = distance;
 		}
 		
 
@@ -155,7 +174,7 @@ public static class Edge{
 			HeapNode point = root;
 			String binaryDirections = (Integer.toBinaryString(size));
 			binaryDirections = binaryDirections.substring(1);
-			int minElement = root.weight;
+			int minElement = root.element;
 			if (getRoot() == null)
 				return -1; //end of heap.
 			
@@ -171,7 +190,7 @@ public static class Edge{
 						
 			}
 			
-			root.weight = point.weight; //move last element to root
+			root.element = point.element; //move last element to root
 			
 			if(size == 1){
 				root = null;
@@ -180,10 +199,10 @@ public static class Edge{
 
 			}
 
-			//System.out.println("the root value is " +point.weight);
-			if(point.parent.rightChild!= null && point.parent.rightChild.weight==point.weight) 
+			//System.out.println("the root value is " +point.element);
+			if(point.parent.rightChild!= null && point.parent.rightChild.element==point.element) 
 				point.parent.rightChild = null;//unlink last element
-			else if (point.parent.leftChild!= null && point.parent.leftChild.weight == point.weight)
+			else if (point.parent.leftChild!= null && point.parent.leftChild.element == point.element)
 				point.parent.leftChild = null;
 			
 		point = null;
@@ -207,20 +226,20 @@ public static class Edge{
 				if(lesserElementChild == -1) break;
 				
 
-				if(lesserElementChild < point.weight ){ //then we must swap elements
+				if(lesserElementChild < point.element ){ //then we must swap elements
 					
-					//System.out.println("time to swap "+  point.weight +" and "+lesserElementChild);
+					//System.out.println("time to swap "+  point.element +" and "+lesserElementChild);
 					
-					int temp = point.weight;
-					point.weight = lesserElementChild;
+					int temp = point.element;
+					point.element = lesserElementChild;
 					lesserElementChild = temp; //put lesser element in node
 					
-					if(point.weight == point.leftChild.weight){
-						point.leftChild.weight = lesserElementChild;
+					if(point.element == point.leftChild.element){
+						point.leftChild.element = lesserElementChild;
 						point = point.leftChild;
 						}
 					else {
-						point.rightChild.weight = lesserElementChild; //swap complete
+						point.rightChild.element = lesserElementChild; //swap complete
 						point = point.rightChild;
 					}
 
@@ -241,9 +260,9 @@ public static class Edge{
 
 			if(parent.leftChild ==null) return -1;
 			
-			else if(parent.rightChild == null || parent.leftChild.weight < parent.rightChild.weight) return parent.leftChild.weight;
+			else if(parent.rightChild == null || parent.leftChild.element < parent.rightChild.element) return parent.leftChild.element;
 
-			else return parent.rightChild.weight;
+			else return parent.rightChild.element;
 
 
 		}
@@ -304,13 +323,13 @@ public static class Edge{
 			
 			
 			while(last!=getRoot()){
-				//System.out.println("the last element: " + last.weight+ "and the parent: "+last.parent.weight);
+				//System.out.println("the last element: " + last.element+ "and the parent: "+last.parent.element);
 				
-				if(last.parent.weight > last.weight ){
+				if(last.parent.element > last.element ){
 					//System.out.print("time fo a swap mawfuka");
-					int temp = last.weight;
-					last.weight = last.parent.weight;
-					last.parent.weight = temp;
+					int temp = last.element;
+					last.element = last.parent.element;
+					last.parent.element = temp;
 					last = last.parent;
 				}
 				else{
@@ -355,7 +374,7 @@ public static class Edge{
 		public HeapNode rightChild;
 		
 		public HeapNode(int element){
-			this.weight = element;
+			this.element = element;
 		}
 	}
 	/* main()
