@@ -75,7 +75,7 @@ public class ShortestPath{
 		 	Vert minVert = h.removeMin();
 		 	//System.out.println("min vert now removed!!! " + minVert.val);
 		 	//h.printTree();
-														ref[minVert.val].inTree = true;
+			ref[minVert.val].inTree = true;
 
 		 	//push neighbourts of minVert
 		 	//System.out.println("the min vert distance is now: "+ minVert.distance[minVert.val] );
@@ -92,12 +92,9 @@ public class ShortestPath{
 						//neighbours are on this row.
 						 //construct heap
 						//System.out.println("heres the edge weight of a neighbour, "+ref[column].val +",: "+  edgeWeight);
-					//	//System.out.println(ref[minVert.val].inTree );
-						
-						
-
+						//	//System.out.println(ref[minVert.val].inTree );
+					
 						//System.out.println("vert added to heap: "+column);
-						
 						
 						if(distance[minVert.val]+ edgeWeight < distance[column]){
 							//System.out.println("distance updated at " + column);
