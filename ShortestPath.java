@@ -56,7 +56,7 @@ public class ShortestPath{
 		Vert[] ref = new Vert[numVerts+1];
 		int[] distance = new int[numVerts+1];
 		for(int i = 1; i<numVerts;i++){
-			distance[i] = 99999999;
+			distance[i] = 99999999;  //large number
 
 		}
 		for(int i = 0;i<numVerts;i++){
@@ -70,53 +70,31 @@ public class ShortestPath{
 		
 		while(h.getSize() != 0){
 			//do heap stuff 
-		 	//h.printTree();
+		 	
 
 		 	Vert minVert = h.removeMin();
-		 	//System.out.println("min vert now removed!!! " + minVert.val);
-		 	//h.printTree();
 			ref[minVert.val].inTree = true;
 
-		 	//push neighbourts of minVert
-		 	//System.out.println("the min vert distance is now: "+ minVert.distance[minVert.val] );
-		 	//System.out.println("its vertex number "+ minVert.val);
+		 	// push neighbourts of minVert
 		 	int count2 = 0; //init 2nd counter
-			//ref[minVert.val].inTree = true;
 		 	int row = minVert.val;
-				//each time we travel down a row, begin column by 1
+				// each time we travel down a row, begin column by 1
 				
 				for(int column=0; column< numVerts;column++){
 					int edgeWeight =  G[row][column];
-				//	System.out.print(edgeWeight + " ");
+				
 					if(edgeWeight > 0 && row == minVert.val && !ref[column].inTree ){
-						//neighbours are on this row.
-						 //construct heap
-						//System.out.println("heres the edge weight of a neighbour, "+ref[column].val +",: "+  edgeWeight);
-						//	//System.out.println(ref[minVert.val].inTree );
-					
-						//System.out.println("vert added to heap: "+column);
+						// neighbours are on this row.
+						// construct heap
+						// System.out.println("vert added to heap: "+column);
 						
 						if(distance[minVert.val]+ edgeWeight < distance[column]){
-							//System.out.println("distance updated at " + column);
-							//System.out.print(distance[column]);
 							distance[column] =  distance[minVert.val] + edgeWeight;
-							//System.out.println("-> " + distance[column] );
-							//System.out.println(" ");
 							h.add(ref[column]);
-
-							
 						}
-
-
 					}
-					
-				}
-				
-	}
-
-
-	
-
+				}		
+		}
 
 		return distance[1];
 		
@@ -142,32 +120,24 @@ public static class Edge{
 		public int val;
 		public int[] distance;
 		public Vector<Vert> neighbours = new Vector<Vert>();
-		//public int distanceAt = distance[val];
-		//public int rank= 0;
-		public Vert(int val,int[] distance){
+
+		public Vert(int val,int[] distance){ // Vertice constructor
 			this.val = val;
-			
 			this.distance = distance;
-			//this.distanceAt = distance[val];
+
 		}
 		
 
 	}
 
 	public static class Heap{
-
-	
 	/* Constructor */
-		
 		HeapNode root;
 		int size;
 		public  Heap(){
-			/* Your code here */
-			
 			root = null;
 			size = 0;
-
-				}
+		}
 
 		
 		/* removeMinimum()
@@ -187,18 +157,13 @@ public static class Edge{
 			
 			for(int i = 0; i<binaryDirections.length();i++){
 					if(binaryDirections.charAt(i)==('1')){ //go right
-							////System.out.println("right");
 							point = point.rightChild;
 						}else{ //go left
-							////System.out.println("left");
 							point = point.leftChild;
-							
-						}
-						
+						}	
 			}
-			
 			root.element = point.element; //move last element to root
-			
+
 			if(size == 1){
 				root = null;
 				size--;
@@ -206,36 +171,27 @@ public static class Edge{
 
 			}
 
-			////System.out.println("the root value is " +point.element);
 			if(point.parent.rightChild!= null && point.parent.rightChild.element==point.element) 
 				point.parent.rightChild = null;//unlink last element
 			else if (point.parent.leftChild!= null && point.parent.leftChild.element == point.element)
 				point.parent.leftChild = null;
 			
-		point = null;
-		size--;
+			point = null;
+			size--;
 			
 			bubbleDown();
-			////System.out.println(minElement);
 			return minElement;
 		}
 
 		public void bubbleDown(){
 			HeapNode point = getRoot();
 			Vert lesserElementChild;
-			
-			
-
 
 			do{
 				lesserElementChild = getLesserComparison(point);
-				
 				if(lesserElementChild.distance[lesserElementChild.val] == -1) break;
-				
-
 				if(lesserElementChild.distance[lesserElementChild.val] < point.element.distance[point.element.val] ){ //then we must swap elements
-					
-					////System.out.println("time to swap "+  point.element +" and "+lesserElementChild);
+					//// swap  point.element  and lesserElementChild);
 					
 					Vert temp = point.element;
 					point.element = lesserElementChild;
@@ -244,7 +200,7 @@ public static class Edge{
 					if(point.element.distance[point.element.val] == point.leftChild.element.distance[point.leftChild.element.val]){
 						point.leftChild.element = lesserElementChild;
 						point = point.leftChild;
-						}
+					}
 					else {
 						point.rightChild.element = lesserElementChild; //swap complete
 						point = point.rightChild;
@@ -253,14 +209,11 @@ public static class Edge{
 				}else{
 					return;
 
-				
-
 				}
 
 
 			}while(lesserElementChild.distance[lesserElementChild.val] >-1);
-			
-			
+		
 		}
 
 		public Vert getLesserComparison(HeapNode parent){
@@ -271,8 +224,6 @@ public static class Edge{
 			else if(parent.rightChild == null || parent.leftChild.element.distance[parent.leftChild.element.val] < parent.rightChild.element.distance[parent.rightChild.element.val]) return parent.leftChild.element;
 
 			else return parent.rightChild.element;
-
-
 		}
 		
 		/* add(e)
@@ -286,7 +237,6 @@ public static class Edge{
 				HeapNode h = new HeapNode(element);
 				root = h;
 				size++;
-				////System.out.println("root");
 			}
 
 			else{
@@ -315,9 +265,7 @@ public static class Edge{
 								bubbleUp(point.leftChild);
 							}else
 								point = point.leftChild;
-							
-						}
-						
+						}	
 					}
 
 				size++;		
@@ -328,8 +276,6 @@ public static class Edge{
 		}
 
 		public void bubbleUp(HeapNode last){
-			
-			
 			while(last!=getRoot()){
 				////System.out.println("the last element: " + last.element+ "and the parent: "+last.parent.element);
 				
